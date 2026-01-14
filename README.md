@@ -22,7 +22,8 @@ docker run --name=postgresdata -p 5432:5432 -v C:/docker/pgdata18:/var/lib/postg
 docker pull mcr.microsoft.com/mssql/server:2022-latest
   # docker run
 docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=msSQL1234!" -p 14330:1433  --name mssql -d mcr.microsoft.com/mssql/server:2022-latest
-  # docker backup 만들기
+
+# docker backup 만들기
 mkdir C:\workspace\hello-docker\backup
 docker run -d --name mssql `
   -e "ACCEPT_EULA=Y" `
@@ -33,12 +34,14 @@ docker run -d --name mssql `
 
 docker exec -it mssql /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "msSQL1234!" -Q "BACKUP DATABASE [MyDb] TO DISK = N'/var/opt/mssql/backup/MyDb.bak' WITH INIT, COMPRESSION" -C
 
-docker run -d --name mssql `
-  -e "ACCEPT_EULA=Y" `
-  -e "MSSQL_SA_PASSWORD=msSQL1234!" `
-  -p 14330:1433 `
-  -v C:\workspace\hello-docker\backup:/var/opt/mssql/backup `
-  mcr.microsoft.com/mssql/server:2022-latest
+# docker backup file restore
+docker exec -it mssql /opt/mssql-tools18/bin/sqlcmd `
+  -S localhost -U sa -P "msSQL1234!" -C `
+  -Q "RESTORE DATABASE [MyDb]
+      FROM DISK = N'/var/opt/mssql/backup/MyDb.bak'
+      WITH MOVE N'MyDb'     TO N'/var/opt/mssql/data/MyDb.mdf',
+           MOVE N'MyDb_log' TO N'/var/opt/mssql/data/MyDb_log.ldf',
+           REPLACE, RECOVERY;"
 
 # Container 기동 또는 중지
 docker container stop <container ID or container Name>
