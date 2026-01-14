@@ -7,7 +7,6 @@ docker ps -a
 
 # image 가져오기
 docker pull mysql:9.5.0
-
 docker pull <image name:image tag>
 
 # image로부터 container 만들기 (Container Name은 중복되지 않게)
@@ -37,10 +36,10 @@ docker exec -it mssql /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "msSQL
 # docker backup file restore
 docker exec -it mssql /opt/mssql-tools18/bin/sqlcmd `
   -S localhost -U sa -P "msSQL1234!" -C `
-  -Q "RESTORE DATABASE [MyDb]
-      FROM DISK = N'/var/opt/mssql/backup/MyDb.bak'
-      WITH MOVE N'MyDb'     TO N'/var/opt/mssql/data/MyDb.mdf',
-           MOVE N'MyDb_log' TO N'/var/opt/mssql/data/MyDb_log.ldf',
+  -Q "RESTORE DATABASE [MyDb1234]
+      FROM DISK = N'/var/opt/mssql/backup/MyDb1234.bak'
+      WITH MOVE N'MyDb'     TO N'/var/opt/mssql/data/MyDb1234.mdf',
+           MOVE N'MyDb_log' TO N'/var/opt/mssql/data/MyDb1234_log.ldf',
            REPLACE, RECOVERY;"
 
 # Container 기동 또는 중지
